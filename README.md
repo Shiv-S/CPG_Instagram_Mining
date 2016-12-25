@@ -3,21 +3,21 @@ Various data mining techniques and machine learning algorithms (in R) used to di
 
 The following features of a post were used to determine their affect on engagement:
 
-Time of the post
-Day of the post
-Daypart of the post (Morning, Afternoon, Evening and Night)
-Whether post has a person
-Number of Likes
-Number of comments
-Words in Caption
+Time of the post,
+Day of the post,
+Daypart of the post (Morning, Afternoon, Evening and Night),
+Whether post has a person,
+Number of Likes,
+Number of comments,
+Words in Caption,
 Number of Hashtags
 
 The datamining techniques used were the following:
 
-Multi-Variable linear regression
-Recursive Feature Elimination (Backward Elimination)
-Decision Tree
-Random Forests
+Multi-Variable linear regression,
+Recursive Feature Elimination (Backward Elimination),
+Decision Tree,
+Random Forests,
 Association Rule mining
 
 The input of the algorithms can be modified according the dataset on which analysis is be conducted. It's is of utmost important to install and load all the packages which are mentioned in the "datamining.txt". If the packages are not installed or loaded properly, the algorithms would not work and the results would not be accurate, irrespective of the scenario where R doesn't show any errors.
