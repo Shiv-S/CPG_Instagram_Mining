@@ -20,6 +20,6 @@ Decision Tree,
 Random Forests,
 Association Rule mining
 
-The input of the algorithms can be modified according the dataset on which analysis is be conducted. It's is of utmost important to install and load all the packages which are mentioned in the "datamining.txt". If the packages are not installed or loaded properly, the algorithms would not work and the results would not be accurate, irrespective of the scenario where R doesn't show any errors.
+The input of the algorithms can be modified according to the dataset on which analysis is be conducted. It's of utmost important to install and load all the packages which are mentioned in the "datamining.txt". If the packages are not installed or loaded properly, the algorithms would not work and the results would not be accurate, irrespective of the scenario where R doesn't show any errors.
 
 For more information or concerns, please contact via email - shivam01university@gmail.com 
