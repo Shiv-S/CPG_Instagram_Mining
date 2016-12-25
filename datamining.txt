@@ -1,0 +1,86 @@
+#Necessary packages for the algorithms
+install.packages('car')
+install.packages('rpart')
+install.packages('party')
+install.packages('arules')
+install.packages('arulesViz')
+install.packages('dplyr')
+install.packages('rattle')
+install.packages('randomForest')
+library(randomForest)
+library(car)
+library(rpart)
+library(party)
+library(arules)
+library(arulesViz)
+library(dplyr)
+library(rattle)
+
+#Reading the data
+cola <- read.csv("filepath/cola.csv")
+
+#Removing outliers which have engagement greater than 4
+cola <- cola[which(cola$Engagement < 4),]
+
+#Bucketing the target variable, Engagement,Putting it into two categories, 0-1 and more than 1
+cola$engagement_cat<-as.factor(recode(cola$Engagement,"0:1='0-1'; 1.000000001:5='more_than_1' "))
+
+
+#Running regression
+lm <- lm(Engagement~Time+Is_Weekend+Has_Person+Post_Type+Words_in_Caption+No_Hashtags, data=cola)
+
+#Perform backward elimination (Recursive Feature Elimination)
+rfe_lm <- step(lm, direction = "backward", trace=FALSE )
+summary(rfe_lm)
+
+library(rpart)
+
+#Creating a Decision Tree
+Tree <- rpart(engagement_cat~Time+Day+Daypart+Person+Type, data = cola, method = 'class')
+
+#Plotting a decision tree in a visually appealing manner
+fancyRpartPlot(Tree)
+title(main = "Coca Cola Decision Tree")
+
+#Printing the confusion matrix of the decision tree
+printcp(Tree)
+
+#Creating a random forest of 2000 trees
+random_forest <- randomForest(as.factor(engagement_cat) ~ Day+Daypart+Person+Type+Product,
+                      data=train, 
+                      importance=TRUE, 
+                      ntree=2000)
+
+#Printing the Accuracy and Confusion matrix of random forest
+random_forest
+
+#Plotting the results to retrieve the features which are most important
+varImpPlot(random_forest)
+
+#Association Rule Mining
+#Separating columns of categorical variables to be used in association rule mining
+col <- c("Day","Daypart","Person","Type","engagement_cat")
+cola.raw <- cola[col]
+
+rules <- apriori(cola.raw, parameter = list(minlen=2, supp=0.1, conf=0.8),
+                 appearance = list(rhs=c("engagement_cat=0-1", "engagement_cat=more_than_1"),
+                                   default="lhs"),
+                 control = list(verbose=F))
+
+rules.sorted <- sort(rules, by="lift")
+#Viewing all the created rules
+inspect(rules.sorted)
+
+#Finding redundant rules
+subset.matrix1 <- is.subset(rules.sorted1, rules.sorted)
+subset.matrix1[lower.tri(subset.matrix1, diag=T)] <- NA
+redundant <- colSums(subset.matrix1, na.rm=T) >= 1
+which(redundant)
+
+#Removing redundant rules
+rules.pruned1 <- rules.sorted1[!redundant]
+inspect(rules.pruned1)
+
+#Plotting the association rules in two different type of plots
+plot(rules, measure=c("support", "lift"), shading="confidence")
+plot(rules, method="graph", control=list(type="items"))
